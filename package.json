@@ -1,0 +1,26 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src\\client.js",
+  "scripts": {
+    "start": "yarn tsc && node build\\client.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "discord.js": "^12.5.3",
+    "discord.js-commando-ptbr": "^1.0.0",
+    "dotenv": "^10.0.0",
+    "ffmpeg": "^0.0.4",
+    "ffmpeg-static": "^4.4.0",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2",
+    "ytdl-core": "^4.9.1",
+    "ytsr": "^3.5.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
