@@ -4,9 +4,11 @@ import Commando from 'discord.js-commando-ptbr';
 import sqlite3 from 'sqlite3';
 import * as sqlite from 'sqlite';
 
+import LevelController from './level/LevelController';
+
 const client = new Commando.Client({
 	owner: '401087598883504141',
-	commandPrefix: '!',
+	commandPrefix: '$',
 });
 
 client
@@ -29,6 +31,7 @@ client.registry
 		{ id: 'admin', name: 'Moderação' },
 		{ id: 'dev', name: 'Desenvolvimento', guarded: true },
 		{ id: 'music', name: 'Música' },
+		{ id: 'level', name: 'Nível (xp)' },
 	])
 	.registerDefaultCommands({
 		help: true,
@@ -43,5 +46,7 @@ client.registry
 client.once('ready', async () => {
 	console.log('Client ready as ' + client.user?.tag);
 });
+
+const levelController = new LevelController(client);
 
 client.login(process.env.TOKEN);

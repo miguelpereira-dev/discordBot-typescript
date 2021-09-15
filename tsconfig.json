@@ -1,5 +1,5 @@
 {
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "src/commands/level"],
 	"compilerOptions": {
 		/* Visit https://aka.ms/tsconfig.json to read more about this file */
 

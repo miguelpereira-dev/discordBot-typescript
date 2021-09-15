@@ -16,17 +16,22 @@ export default class ListaCommand extends Command {
 	async run(msg: CommandoMessage) {
 		if (music.queue.length == 0) return msg.channel.send('`A fila está vazia.`');
 		const { thumbnailUrl, title, url } = music.queue[0];
-		const noFirstMusic: Item[] = [].concat(music.queue).shift();
+		const noFirstMusic: Item[] = [].concat(music.queue);
+		noFirstMusic.shift();
 
 		const embed = new MessageEmbed()
-			.setTitle(`\`Tocando agora [0]\`:\n ${title}`)
+			.setTitle(`Tocando agora [0]:\n \`${title}\``)
 			.setAuthor('Playlist atual')
 			.setURL(url)
 			.setColor('RED')
 			.setThumbnail(thumbnailUrl);
 		if (noFirstMusic.length > 0)
 			noFirstMusic.forEach((item, index) => {
-				embed.addFields({ name: `\`${index + 1}\``, value: item.title });
+				embed.addFields({
+					name: `[${index + 1}]:`,
+					value: `\`${item.title}\``,
+					inline: true,
+				});
 			});
 
 		return await msg.channel.send(embed);

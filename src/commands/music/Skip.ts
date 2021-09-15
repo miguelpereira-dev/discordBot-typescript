@@ -13,7 +13,7 @@ export default class PlayCommand extends Command {
 				'Para a música atual e começa a próxima da fila, se houver alguma',
 			group: 'music',
 			memberName: 'skip',
-			aliases: ['s'],
+			aliases: ['s', 'fs'],
 		});
 	}
 	async run(msg: CommandoMessage) {

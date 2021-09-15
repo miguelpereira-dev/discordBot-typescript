@@ -51,7 +51,7 @@ export default class PlayCommand extends Command {
 					value:
 						music.queue.length == 1
 							? '`Tocando agora!`'
-							: `\` ${music.queue.length} \``,
+							: `\` ${music.queue.length - 1} \``,
 				})
 				.setFooter(author.name, author.iconUrl);
 
