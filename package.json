@@ -4,7 +4,8 @@
   "description": "",
   "main": "src\\client.js",
   "scripts": {
-    "start": "yarn tsc && node build\\client.js"
+    "watch": "yarn tsc -w",
+    "start": "node build\\client.js"
   },
   "author": "",
   "license": "ISC",
