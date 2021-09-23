@@ -1,5 +1,4 @@
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando-ptbr';
-import Discord from 'discord.js';
 import music from '../../music/Music';
 
 type Args = {
@@ -16,9 +15,11 @@ export default class PauseCommand extends Command {
 		});
 	}
 	async run(msg: CommandoMessage) {
-		if (music.queue.length > 0) {
-			const { title } = music.queue[0];
-			const paused = await music.pause();
+		const guildId = msg.guild.id;
+
+		if (music.queues[guildId].length > 0) {
+			const { title } = music.queues[guildId][0];
+			const paused = await music.pause(guildId);
 			if (!paused) return msg.channel.send(`Iniciando \`${title}\``);
 			return msg.channel.send(`Pausando \`${title}\``);
 		}

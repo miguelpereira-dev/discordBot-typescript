@@ -11,11 +11,15 @@ export type Item = {
 };
 
 class Music {
-	public queue: Item[] = [];
-	private dispatcher: StreamDispatcher;
 	public paused: boolean;
+	public queues: { [guildId: string]: Item[] } = {};
+	private dispatchers: { [guildId: string]: StreamDispatcher } = {};
 
-	async addMusic(msg: CommandoMessage, music: string) {
+	async addMusic(msg: CommandoMessage, music: string, guildId: string) {
+		if (!this.queues[guildId]) {
+			this.queues[guildId] = [];
+		}
+
 		let addedMusic: Item;
 		await this.search(music).then(async (video: Video) => {
 			addedMusic = {
@@ -27,31 +31,37 @@ class Music {
 				},
 				thumbnailUrl: video.bestThumbnail.url,
 			};
-			this.queue.push(addedMusic);
-			if (this.queue.length == 1) await this.play(msg, video.url);
+			this.queues[guildId].push(addedMusic);
+			if (this.queues[guildId].length == 1) await this.play(msg, video.url);
 		});
 
 		return addedMusic;
 	}
 
-	async skip(msg: CommandoMessage) {
-		const skipedMusic = this.queue.shift();
-		this.dispatcher.destroy();
-		let hasAnother: boolean;
-		if (this.queue.length > 0) {
-			const current = this.queue[0];
-			hasAnother = true;
-			await this.play(msg, current.url);
+	async skip(msg: CommandoMessage, guildId: string) {
+		if (!this.queues[guildId]) {
+			this.queues[guildId] = [];
 		}
-		return { hasAnother, skipedMusic };
+
+		if (this.dispatchers[guildId]) {
+			const skipedMusic = this.queues[guildId].shift();
+			this.dispatchers[guildId].destroy();
+			let hasAnother: boolean;
+			if (this.queues[guildId].length > 0) {
+				const current = this.queues[guildId][0];
+				hasAnother = true;
+				await this.play(msg, current.url);
+			}
+			return { hasAnother, skipedMusic };
+		}
 	}
 
-	async pause() {
-		if (this.dispatcher) {
+	async pause(guildId: string) {
+		if (this.dispatchers[guildId]) {
 			if (this.paused) {
-				this.dispatcher.resume();
+				this.dispatchers[guildId].resume();
 			} else {
-				this.dispatcher.pause();
+				this.dispatchers[guildId].pause();
 			}
 			this.paused = !this.paused;
 			return this.paused;
@@ -65,9 +75,16 @@ class Music {
 
 	private async play(msg: CommandoMessage, url: string) {
 		if (msg.member.voice.channel && this.validate(url)) {
-			const connection = await msg.member.voice.channel.join();
-			this.dispatcher = await this.getDispatcher(connection, url, msg);
-			return this.dispatcher != null;
+			let connection: VoiceConnection;
+
+			connection = await msg.member.voice.channel.join();
+
+			this.dispatchers[msg.guild.id] = await this.getDispatcher(
+				connection,
+				url,
+				msg
+			);
+			return this.dispatchers[msg.guild.id] != null;
 		}
 	}
 
@@ -105,21 +122,21 @@ class Music {
 		const { title } = info.videoDetails;
 
 		dispatcher.on('start', () => {
-			console.log(title + ' is now playing!');
+			console.log(Date.now() + ` - {${msg.guild.name}}: [${title}] is now playing!`);
 		});
 
 		dispatcher.on('finish', () => {
-			console.log(title + ' has finished playing!');
-			this.queue.shift();
+			console.log(Date.now() + ` - {${msg.guild.name}}: [${title}] has finished playing!`);
+			this.queues[msg.guild.id].shift();
 			dispatcher.destroy();
 
-			if (this.queue.length > 0) {
-				const current = this.queue[0];
+			if (this.queues[msg.guild.id].length > 0) {
+				const current = this.queues[msg.guild.id][0];
 				this.play(msg, current.url);
 			} else {
 				setTimeout(() => {
 					msg.client.voice.connections.first().disconnect();
-				}, 5000);
+				}, 1000 * 60 * 2);
 			}
 		});
 

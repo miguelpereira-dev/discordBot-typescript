@@ -14,9 +14,12 @@ export default class ListaCommand extends Command {
 	}
 
 	async run(msg: CommandoMessage) {
-		if (music.queue.length == 0) return msg.channel.send('`A fila está vazia.`');
-		const { thumbnailUrl, title, url } = music.queue[0];
-		const noFirstMusic: Item[] = [].concat(music.queue);
+		const guildId = msg.guild.id;
+
+		if (music.queues[guildId].length == 0) return msg.channel.send('`A fila está vazia.`');
+		
+		const { thumbnailUrl, title, url } = music.queues[guildId][0];
+		const noFirstMusic: Item[] = [].concat(music.queues[guildId]);
 		noFirstMusic.shift();
 
 		const embed = new MessageEmbed()

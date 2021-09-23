@@ -31,27 +31,29 @@ export default class PlayCommand extends Command {
 
 		if (msg.member.voice.channel) {
 			if (music.paused) {
-				await music.pause();
+				
+				await music.pause(msg.guild.id);
 				return;
 			}
 
 			const { title, thumbnailUrl, author, url } = await music.addMusic(
 				msg,
-				args.music
+				args.music,
+				msg.guild.id
 			);
 
 			const embed = new MessageEmbed()
 				.setTitle(`Adicionando à fila: \n\`${title}\``)
 				.setURL(url)
 				.setAuthor('Nova música')
-				.setColor('RED')
+				.setColor('DARK_PURPLE')
 				.setThumbnail(thumbnailUrl)
 				.addFields({
 					name: 'Posição na fila: ',
 					value:
-						music.queue.length == 1
+						music.queues[msg.guild.id].length == 1
 							? '`Tocando agora!`'
-							: `\` ${music.queue.length - 1} \``,
+							: `\` ${music.queues[msg.guild.id].length - 1} \``,
 				})
 				.setFooter(author.name, author.iconUrl);
 

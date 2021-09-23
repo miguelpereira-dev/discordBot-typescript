@@ -5,7 +5,7 @@
   "main": "src\\client.js",
   "scripts": {
     "watch": "tsc -w",
-    "start": "tsc && node build\\client.js"
+    "start": "node build\\client.js"
   },
   "author": "",
   "license": "ISC",

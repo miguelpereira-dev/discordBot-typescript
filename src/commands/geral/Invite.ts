@@ -13,7 +13,7 @@ export default class PingCommand extends Command {
 
 	async run(msg: CommandoMessage) {
 		let message;
-		this.client.generateInvite().then(async (link) => {
+		this.client.generateInvite({permissions: 'ADMINISTRATOR'}).then(async (link) => {
 			message = await msg.reply(link);
 		});
 		return message;
