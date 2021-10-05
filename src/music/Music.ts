@@ -122,11 +122,11 @@ class Music {
 		const { title } = info.videoDetails;
 
 		dispatcher.on('start', () => {
-			console.log(Date.now() + ` - {${msg.guild.name}}: [${title}] is now playing!`);
+			console.log(Date.now().toLocaleString('pt-BR') + ` - {${msg.guild.name}}: [${title}] is now playing!`);
 		});
 
 		dispatcher.on('finish', () => {
-			console.log(Date.now() + ` - {${msg.guild.name}}: [${title}] has finished playing!`);
+			console.log(Date.now().toLocaleString('pt-BR') + ` - {${msg.guild.name}}: [${title}] has finished playing!`);
 			this.queues[msg.guild.id].shift();
 			dispatcher.destroy();
 

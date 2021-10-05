@@ -14,6 +14,7 @@ export default class PauseCommand extends Command {
 			group: 'music',
 		});
 	}
+
 	async run(msg: CommandoMessage) {
 		const guildId = msg.guild.id;
 

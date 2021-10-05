@@ -29,7 +29,7 @@ export default class PlayCommand extends Command {
 
 		const embed = new MessageEmbed()
 			.setColor('RED')
-			.setFooter(msg.author.username + ':')
+			.setAuthor(msg.author.username + ':')
 			.addFields({
 				name: 'Parando música:',
 				value: skipedMusic.title,
